@@ -1,4 +1,4 @@
-#![allow(unused_variables)]
+#![allow(unused_variables, dead_code)]
 fn main() {
   extern crate cfg_if;
   extern crate wasm_bindgen;
@@ -19,13 +19,37 @@ fn main() {
     }
   }
 
+  // #[wasm_bindgen]
+  // extern "C" {
+  //   fn alert(s: &str);
+  // }
+
   #[wasm_bindgen]
-  extern "C" {
-    fn alert(s: &str);
+  #[repr(u8)]
+  #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+  /* This is used to keep track of which of
+  the two states a Cell can be at any time */
+  pub enum Cell {
+    Dead = 0,
+    Alive = 1,
   }
 
   #[wasm_bindgen]
-  pub fn greet(name: &str) {
-    alert(&format!("Hello, {}!", name));
+  // This defines the properties of Universe objects
+  pub struct Universe {
+    width: u32,
+    height: u32,
+    cells: Vec<Cell>,
+  }
+
+  // This defines the methods of Universe objects
+  impl Universe {
+    /*
+      @params: row and column number of a Cell in a grid
+      @returns: index of the cell inside of wasm's linear memory space
+    */
+    fn get_index(&self, row: u32, column: u32) -> usize {
+      (row * self.width + column) as usize
+    }
   }
 }
