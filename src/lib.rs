@@ -7,6 +7,7 @@ fn main() {
   mod utils;
 
   use cfg_if::cfg_if;
+  use rand::prelude::*;
   use std::fmt;
   use wasm_bindgen::prelude::*;
 
@@ -79,6 +80,10 @@ fn main() {
   /// Public methods, exported to JavaScript.
   #[wasm_bindgen]
   impl Universe {
+    /**
+     * This function is used to update the state of each cell in the
+     * next generation according tothe rules of Conway's Game of Life
+     */
     pub fn tick(&mut self) {
       let mut next = self.cells.clone();
 
@@ -111,13 +116,14 @@ fn main() {
       self.cells = next;
     }
 
+    // This initializes a new Universe
     pub fn new() -> Universe {
       let width = 64;
       let height = 64;
 
       let cells = (0..width * height)
-        .map(|i| {
-          if i % 2 == 0 || i % 7 == 0 {
+        .map(|_| {
+          if rand::random() {
             Cell::Alive
           } else {
             Cell::Dead
