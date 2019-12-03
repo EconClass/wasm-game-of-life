@@ -1,7 +1,7 @@
 import { Universe, Cell } from "wasm-game-of-life";
 import { memory } from "wasm-game-of-life/wasm_game_of_life_bg";
 
-const CELL_SIZE = 5; // px
+const CELL_SIZE = document.getElementById('game-of-life-canvas').width / 20; // px
 const GRID_COLOR = "#CCC";
 const DEAD_COLOR = "hsla(50, 86%, 60%, 1)";
 const ALIVE_COLOR = "hsla(231, 86%, 33%, 1)";
@@ -68,14 +68,11 @@ const drawCells = () => {
 
 const renderLoop = () => {
   universe.tick();
-
   drawGrid();
   drawCells();
-
-  requestAnimationFrame(renderLoop);
 };
 
 // Initial call to JS
 drawGrid();
 drawCells();
-requestAnimationFrame(renderLoop);
+requestAnimationFrame(setInterval(renderLoop, 100));
